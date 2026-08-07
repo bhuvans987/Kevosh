@@ -17,6 +17,10 @@ const faqs: FaqItem[] = [
     answer: 'Most analytics tools only track pageviews or clicks, not actual dollars deposited into your bank account. By ingesting webhook payment events directly from Stripe and Dodo Payments, Attributely ensures 100% server-verified revenue attribution.',
   },
   {
+    question: 'How is my payment data kept private and secure?',
+    answer: 'Attributely never sells, rents, or shares your data. We strip sensitive billing details (card info, physical addresses, IPs) before saving webhooks, automatically purge raw event blobs after 30 days, and provide 1-click full account & data deletion at any time.',
+  },
+  {
     question: 'How easy is it to set up for solo founders?',
     answer: 'It takes less than 2 minutes. Add our single API endpoint or lightweight JS snippet to your signup handler, paste your webhook secret in the environment variables, and revenue attribution begins automatically.',
   },

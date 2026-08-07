@@ -11,7 +11,40 @@ export interface AttributionData {
 
 const COOKIE_NAME = 'attr_src';
 const STORAGE_KEY = 'attr_src';
+const CONSENT_KEY = 'cookie_consent';
 const COOKIE_MAX_AGE_DAYS = 30;
+
+/**
+ * Check if the visitor has explicitly accepted cookies under GDPR consent guidelines.
+ */
+export function hasCookieConsent(): boolean {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(CONSENT_KEY) === 'accepted';
+}
+
+/**
+ * Record user cookie consent decision. If accepted, immediately capture and store attribution data.
+ */
+export function setCookieConsent(accepted: boolean): void {
+  if (typeof window === 'undefined') return;
+
+  if (accepted) {
+    localStorage.setItem(CONSENT_KEY, 'accepted');
+    const attrData = captureAttributionFromUrl();
+    if (attrData) {
+      storeAttributionData(attrData);
+    }
+  } else {
+    localStorage.setItem(CONSENT_KEY, 'declined');
+    // Clear any existing attribution cookie or session storage if declined
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+      document.cookie = `${COOKIE_NAME}=; max-age=0; path=/;`;
+    } catch {
+      // Ignore errors
+    }
+  }
+}
 
 export function captureAttributionFromUrl(): AttributionData | null {
   if (typeof window === 'undefined') return null;
@@ -57,6 +90,12 @@ export function captureAttributionFromUrl(): AttributionData | null {
 
 export function storeAttributionData(data: AttributionData): void {
   if (typeof window === 'undefined') return;
+
+  // Gate cookie & storage creation behind GDPR consent check
+  if (!hasCookieConsent()) {
+    console.log('[Attribution] Cookie storage deferred until visitor accepts cookie consent.');
+    return;
+  }
 
   try {
     const jsonStr = JSON.stringify(data);

@@ -113,6 +113,13 @@ export async function POST(req: NextRequest) {
   // Insert or Upsert into unified Supabase `payments` table
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     try {
+      const minimalRawEvent = {
+        provider_event_id: event.id,
+        event_type: eventType,
+        metadata_received: dataObj?.metadata || {},
+        received_at: new Date().toISOString(),
+      };
+
       const { error } = await supabaseAdmin.from('payments').upsert(
         {
           user_id: founderId,
@@ -123,7 +130,7 @@ export async function POST(req: NextRequest) {
           status,
           customer_email: customerEmail,
           event_type: eventType,
-          raw_event: event,
+          raw_event: minimalRawEvent,
           updated_at: new Date().toISOString(),
         },
         { onConflict: 'provider,payment_id' }

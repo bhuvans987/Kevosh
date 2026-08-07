@@ -6,6 +6,7 @@ import { supabaseAdmin } from '@/lib/supabase';
 import { SourceAttributionChart } from '@/components/SourceAttributionChart';
 import { WeeklySummaryCard } from '@/components/WeeklySummaryCard';
 import { UpgradeButton } from '@/components/UpgradeButton';
+import { DeleteAccountModal } from '@/components/DeleteAccountModal';
 
 export interface SourceStat {
   source_label: string;
@@ -212,6 +213,7 @@ export default async function DashboardPage() {
           )}
 
           <div className="flex items-center gap-3 border-l border-zinc-200 pl-3">
+            <DeleteAccountModal />
             <div className="text-right hidden lg:block">
               <p className="text-xs font-medium text-zinc-800">{user?.firstName || user?.emailAddresses[0]?.emailAddress}</p>
               <p className="text-[10px] text-zinc-500 font-mono">Plan: {plan.toUpperCase()}</p>

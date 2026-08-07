@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import { AttributionTracker } from '@/components/AttributionTracker';
+import { CookieConsentBanner } from '@/components/CookieConsentBanner';
 import './globals.css';
 
 const inter = Inter({
@@ -32,6 +33,7 @@ export default function RootLayout({
         <body className="min-h-screen bg-[#fafafa] text-[#09090b] font-sans antialiased selection:bg-indigo-500/20 selection:text-indigo-900">
           <AttributionTracker />
           {children}
+          <CookieConsentBanner />
         </body>
       </html>
     </ClerkProvider>

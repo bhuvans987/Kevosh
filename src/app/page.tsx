@@ -372,6 +372,8 @@ export default async function HomePage() {
             <a href="#how-it-works" className="hover:text-zinc-900 transition-colors">How it works</a>
             <a href="#pricing" className="hover:text-zinc-900 transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-zinc-900 transition-colors">FAQ</a>
+            <Link href="/privacy" className="hover:text-zinc-900 transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-zinc-900 transition-colors">Terms</Link>
           </div>
         </div>
       </footer>
