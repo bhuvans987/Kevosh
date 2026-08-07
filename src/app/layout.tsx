@@ -28,8 +28,8 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} dark h-full`}>
-        <body className="min-h-screen bg-[#09090b] text-[#f4f4f5] font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+      <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} h-full`}>
+        <body className="min-h-screen bg-[#fafafa] text-[#09090b] font-sans antialiased selection:bg-indigo-500/20 selection:text-indigo-900">
           <AttributionTracker />
           {children}
         </body>

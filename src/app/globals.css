@@ -2,13 +2,13 @@
 
 @layer base {
   :root {
-    --background: #09090b;
-    --foreground: #f4f4f5;
-    --surface: #121318;
-    --surface-hover: #181920;
-    --border-subtle: #27272a;
+    --background: #fafafa;
+    --foreground: #09090b;
+    --surface: #ffffff;
+    --surface-hover: #f4f4f5;
+    --border-subtle: #e4e4e7;
     --accent: #6366f1;
-    --accent-glow: rgba(99, 102, 241, 0.15);
+    --accent-glow: rgba(99, 102, 241, 0.08);
   }
 
   body {
@@ -24,30 +24,56 @@
 .bg-attio-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
 }
 
 /* Attio Radial Glows */
 .bg-attio-radial {
-  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12) 0%, rgba(9, 9, 11, 0) 70%);
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.07) 0%, rgba(250, 250, 250, 0) 70%);
 }
 
 .bg-attio-radial-bottom {
-  background: radial-gradient(circle at 50% 100%, rgba(139, 92, 246, 0.1) 0%, rgba(9, 9, 11, 0) 70%);
+  background: radial-gradient(circle at 50% 100%, rgba(139, 92, 246, 0.06) 0%, rgba(250, 250, 250, 0) 70%);
 }
 
-/* Glass & Hairline Borders */
+/* Glass & Clean Hairline Borders */
 .attio-card {
-  background-color: #121318;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .attio-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  background-color: #16171f;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Attio Pill Badge with Top Hairline Gradient Border */
+.attio-pill {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.attio-pill::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), transparent);
+}
+
+.attio-pill:hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
 }
 
 /* Custom Scrollbar */
@@ -56,13 +82,14 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #fafafa;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #d4d4d8;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #a1a1aa;
 }
+
 

@@ -1,16 +1,20 @@
 -- Schema for Next.js SaaS Attribution Tool (Phase 1)
 -- Multi-provider payment tracking (Stripe + Dodo Payments)
 
--- Founders table: Stores Clerk user mapping to internal app user IDs
+-- Founders table: Stores Clerk user mapping to internal app user IDs & subscription plan
 CREATE TABLE IF NOT EXISTS public.founders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     clerk_user_id TEXT UNIQUE NOT NULL,               -- Unique Clerk User ID (e.g. user_2...)
     email TEXT,                                       -- Primary email address
+    plan TEXT NOT NULL DEFAULT 'free',                -- Subscription plan: 'free' or 'paid' ($20/mo)
+    subscription_id TEXT,                             -- External Dodo Payments subscription ID
+    subscription_status TEXT DEFAULT 'active',        -- 'active', 'cancelled', 'past_due'
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Index for fast founder lookup by Clerk User ID
 CREATE INDEX IF NOT EXISTS idx_founders_clerk_user_id ON public.founders(clerk_user_id);
+CREATE INDEX IF NOT EXISTS idx_founders_plan ON public.founders(plan);
 
 -- RLS Policies for founders
 ALTER TABLE public.founders ENABLE ROW LEVEL SECURITY;
@@ -88,10 +92,14 @@ CREATE POLICY "Service role full access on signups" ON public.signups
 
 /*
 MIGRATION NOTICE FOR EXISTING DATABASES:
-If your Supabase database already has `payments` table with `user_id` as TEXT:
-1. Drop existing test payments or map them to valid founder UUIDs.
-2. Run:
+1. To add founder billing columns to an existing database, run:
+   ALTER TABLE public.founders ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free';
+   ALTER TABLE public.founders ADD COLUMN IF NOT EXISTS subscription_id TEXT;
+   ALTER TABLE public.founders ADD COLUMN IF NOT EXISTS subscription_status TEXT DEFAULT 'active';
+
+2. If your Supabase database already has `payments` table with `user_id` as TEXT:
    ALTER TABLE public.payments ALTER COLUMN user_id TYPE UUID USING user_id::uuid;
    ALTER TABLE public.payments ADD CONSTRAINT fk_payments_founder FOREIGN KEY (user_id) REFERENCES public.founders(id) ON DELETE CASCADE;
 */
+
 
