@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
             },
             product_cart: [
               {
-                product_id: 'prod_attributely_pro_monthly',
+                product_id: 'prod_kevosh_pro_monthly',
                 quantity: 1,
               },
             ],

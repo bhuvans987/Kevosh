@@ -9,16 +9,16 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   {
-    question: 'How does Attributely track visitor traffic without cookies?',
-    answer: 'Attributely captures first-party referral headers, UTM parameters, and optional how-heard survey inputs during signup. When a user creates an account, their attribution source label is stored securely on your backend and matched via webhook when Stripe or Dodo Payments fires a successful payment event.',
+    question: 'How does Kevosh track visitor traffic without cookies?',
+    answer: 'Kevosh captures first-party referral headers, UTM parameters, and optional how-heard survey inputs during signup. When a user creates an account, their attribution source label is stored securely on your backend and matched via webhook when Stripe or Dodo Payments fires a successful payment event.',
   },
   {
     question: 'Why Stripe & Dodo Payments webhook integration?',
-    answer: 'Most analytics tools only track pageviews or clicks, not actual dollars deposited into your bank account. By ingesting webhook payment events directly from Stripe and Dodo Payments, Attributely ensures 100% server-verified revenue attribution.',
+    answer: 'Most analytics tools only track pageviews or clicks, not actual dollars deposited into your bank account. By ingesting webhook payment events directly from Stripe and Dodo Payments, Kevosh ensures 100% server-verified revenue attribution.',
   },
   {
     question: 'How is my payment data kept private and secure?',
-    answer: 'Attributely never sells, rents, or shares your data. We strip sensitive billing details (card info, physical addresses, IPs) before saving webhooks, automatically purge raw event blobs after 30 days, and provide 1-click full account & data deletion at any time.',
+    answer: 'Kevosh never sells, rents, or shares your data. We strip sensitive billing details (card info, physical addresses, IPs) before saving webhooks, automatically purge raw event blobs after 30 days, and provide 1-click full account & data deletion at any time.',
   },
   {
     question: 'How easy is it to set up for solo founders?',

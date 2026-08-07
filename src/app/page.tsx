@@ -26,7 +26,7 @@ export default async function HomePage() {
               </svg>
             </div>
             <span className="font-bold text-base tracking-tight text-zinc-900 font-sans">
-              Attributely
+              Kevosh
             </span>
           </Link>
         </div>
@@ -194,7 +194,7 @@ export default async function HomePage() {
               3-Step Workflow
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight">
-              How Attributely connects revenue to traffic
+              How Kevosh connects revenue to traffic
             </h2>
             <p className="text-xs sm:text-sm text-zinc-600 max-w-md mx-auto">
               No complex tag managers or cookie banners required.
@@ -352,7 +352,7 @@ export default async function HomePage() {
               Frequently Asked Questions
             </h2>
             <p className="text-xs sm:text-sm text-zinc-600 max-w-md mx-auto">
-              Everything you need to know about setting up Attributely.
+              Everything you need to know about setting up Kevosh.
             </p>
           </div>
 
@@ -364,8 +364,8 @@ export default async function HomePage() {
       <footer className="relative z-10 border-t border-zinc-200/80 bg-white py-8 px-6 text-center text-xs text-zinc-500">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-zinc-900">Attributely</span>
-            <span>© {new Date().getFullYear()} Attributely Inc. All rights reserved.</span>
+            <span className="font-bold text-zinc-900">Kevosh</span>
+            <span>© {new Date().getFullYear()} Kevosh Inc. All rights reserved.</span>
           </div>
           <div className="flex items-center gap-4 text-zinc-600">
             <Link href="/dashboard" className="hover:text-zinc-900 transition-colors">Dashboard</Link>

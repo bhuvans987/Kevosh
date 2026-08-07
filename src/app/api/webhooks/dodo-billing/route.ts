@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 /**
  * Dedicated Webhook Handler for Founder Subscription Billing via Dodo Payments
- * (OUR founders paying US for Attributely Pro)
+ * (OUR founders paying US for Kevosh Pro)
  */
 export async function POST(req: NextRequest) {
   const body = await req.text();

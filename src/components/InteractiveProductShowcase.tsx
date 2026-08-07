@@ -13,7 +13,7 @@ export function InteractiveProductShowcase() {
           <span className="w-3 h-3 rounded-full bg-red-400/80 inline-block" />
           <span className="w-3 h-3 rounded-full bg-amber-400/80 inline-block" />
           <span className="w-3 h-3 rounded-full bg-emerald-400/80 inline-block" />
-          <span className="text-xs font-mono text-zinc-400 ml-2">app.attributely.io/live-analytics</span>
+          <span className="text-xs font-mono text-zinc-400 ml-2">app.kevosh.io/live-analytics</span>
         </div>
 
         {/* Tab Selector */}

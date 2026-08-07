@@ -187,7 +187,7 @@ export default async function DashboardPage() {
               </svg>
             </div>
             <span className="font-bold text-sm tracking-tight text-zinc-900 hidden sm:inline">
-              Attributely
+              Kevosh
             </span>
           </Link>
           <span className="text-zinc-300 hidden sm:inline">/</span>
@@ -424,7 +424,7 @@ export default async function DashboardPage() {
               <div className="space-y-1.5 max-w-lg mx-auto">
                 <h3 className="text-base font-semibold text-zinc-900">No Attribution Events Recorded Yet</h3>
                 <p className="text-xs text-zinc-500 leading-relaxed">
-                  Attributely is active and listening for signups. Integrate our lightweight tracking snippet or call our API to start capturing revenue attribution.
+                  Kevosh is active and listening for signups. Integrate our lightweight tracking snippet or call our API to start capturing revenue attribution.
                 </p>
               </div>
 

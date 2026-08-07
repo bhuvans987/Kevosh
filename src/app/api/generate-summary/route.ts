@@ -31,7 +31,7 @@ function buildFallbackSummary(sources: SourceStat[]): string {
     sentence2 = ` Overall conversion efficiency stands at ${overallRate}% across ${sources.length} active channel${sources.length > 1 ? 's' : ''}.`;
   }
 
-  let sentence3 = ` Across all channels combined, Attributely recorded ${totalSignups} total signups and ${totalConverted} converted paying customer${totalConverted === 1 ? '' : 's'} (${overallRate}% overall rate).`;
+  let sentence3 = ` Across all channels combined, Kevosh recorded ${totalSignups} total signups and ${totalConverted} converted paying customer${totalConverted === 1 ? '' : 's'} (${overallRate}% overall rate).`;
 
   let sentence4 = ` To optimize your CAC, allocate more focus toward high-intent conversion channels while refining landing page positioning for high-volume top-of-funnel sources.`;
 
@@ -157,7 +157,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         success: true,
         summary: fallbackSummary,
-        modelUsed: 'Attributely Insights Engine',
+        modelUsed: 'Kevosh Insights Engine',
         isFallback: true,
         timestamp: new Date().toISOString(),
       });
@@ -168,7 +168,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         success: true,
         summary: fallbackSummary,
-        modelUsed: 'Attributely Insights Engine',
+        modelUsed: 'Kevosh Insights Engine',
         isFallback: true,
         timestamp: new Date().toISOString(),
         warning: result.error,

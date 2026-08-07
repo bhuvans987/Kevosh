@@ -2,8 +2,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — Attributely',
-  description: 'Attributely Data Privacy Policy, GDPR compliance, CCPA disclosures, and Data Processing Agreement (DPA) summary.',
+  title: 'Privacy Policy — Kevosh',
+  description: 'Kevosh Data Privacy Policy, GDPR compliance, CCPA disclosures, and Data Processing Agreement (DPA) summary.',
 };
 
 export default function PrivacyPage() {
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
                 <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <span className="font-bold text-sm tracking-tight text-zinc-900">Attributely</span>
+            <span className="font-bold text-sm tracking-tight text-zinc-900">Kevosh</span>
           </Link>
           <span className="text-zinc-300">/</span>
           <span className="text-xs font-medium text-zinc-600 bg-zinc-100 border border-zinc-200 px-2.5 py-0.5 rounded-md">
@@ -53,7 +53,7 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="text-sm text-zinc-600 max-w-2xl leading-relaxed">
-            Transparent data handling, minimization practices, GDPR & CCPA disclosures, and Data Processing Agreement (DPA) provisions for Attributely users.
+            Transparent data handling, minimization practices, GDPR & CCPA disclosures, and Data Processing Agreement (DPA) provisions for Kevosh users.
           </p>
         </div>
 
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
           <section className="space-y-3">
             <h2 className="text-xl font-bold text-zinc-950 tracking-tight">1. Information We Collect</h2>
             <p>
-              Attributely provides a multi-channel revenue attribution engine for software founders ("Founders"). We process data from two distinct categories of individuals:
+              Kevosh provides a multi-channel revenue attribution engine for software founders ("Founders"). We process data from two distinct categories of individuals:
             </p>
 
             <div className="space-y-3 pl-1">
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
               <div className="p-4 bg-white border border-zinc-200 rounded-xl space-y-1.5">
                 <h3 className="font-semibold text-zinc-900 text-sm">B. End-Customer Data (Processed on Behalf of Founders)</h3>
                 <p className="text-xs text-zinc-600">
-                  When a Founder integrates our tracking API or connects payment provider webhooks (Stripe or Dodo Payments), Attributely ingests end-customer data on the Founder's behalf:
+                  When a Founder integrates our tracking API or connects payment provider webhooks (Stripe or Dodo Payments), Kevosh ingests end-customer data on the Founder's behalf:
                 </p>
                 <ul className="list-disc pl-5 text-xs text-zinc-600 space-y-1">
                   <li><strong>Signup Identifiers:</strong> End-customer email addresses, referral domains, UTM parameters (source, medium, campaign), and self-reported survey answers.</li>
@@ -122,7 +122,7 @@ export default function PrivacyPage() {
             <ul className="list-disc pl-5 space-y-1 text-zinc-600">
               <li>Matching top-of-funnel signup sources with server-verified Stripe and Dodo Payments events.</li>
               <li>Displaying aggregated conversion metrics and AI-generated performance digests on the Founder dashboard.</li>
-              <li>Processing subscription billing for the Founder's Attributely Pro plan.</li>
+              <li>Processing subscription billing for the Founder's Kevosh Pro plan.</li>
             </ul>
           </section>
 
@@ -132,10 +132,10 @@ export default function PrivacyPage() {
             <div className="p-4 bg-zinc-900 text-white rounded-xl space-y-2">
               <p className="text-xs font-mono text-zinc-400 font-bold uppercase">Role Allocation Under Global Privacy Laws</p>
               <p className="text-xs text-zinc-300 leading-relaxed">
-                <strong>Founder as Data Controller:</strong> The Founder remains the Data Controller for all end-customer data transmitted to Attributely. The Founder is responsible for securing any legally required consents or privacy disclosures from their website visitors and customers.
+                <strong>Founder as Data Controller:</strong> The Founder remains the Data Controller for all end-customer data transmitted to Kevosh. The Founder is responsible for securing any legally required consents or privacy disclosures from their website visitors and customers.
               </p>
               <p className="text-xs text-zinc-300 leading-relaxed">
-                <strong>Attributely as Data Processor:</strong> Attributely acts strictly as a Data Processor, processing end-customer data solely pursuant to the Founder's instructions and contract.
+                <strong>Kevosh as Data Processor:</strong> Kevosh acts strictly as a Data Processor, processing end-customer data solely pursuant to the Founder's instructions and contract.
               </p>
             </div>
           </section>
@@ -173,7 +173,7 @@ export default function PrivacyPage() {
             <div className="p-4 bg-white border border-zinc-200 rounded-xl space-y-2 text-xs text-zinc-600">
               <p className="font-semibold text-zinc-900">Notice of No Sale or Sharing:</p>
               <p>
-                <strong>Attributely does NOT sell, rent, or share personal information</strong> with third parties for monetary or cross-context behavioral advertising purposes.
+                <strong>Kevosh does NOT sell, rent, or share personal information</strong> with third parties for monetary or cross-context behavioral advertising purposes.
               </p>
               <p className="font-semibold text-zinc-900 pt-1">California Resident Rights:</p>
               <ul className="list-disc pl-5 space-y-1">
@@ -216,7 +216,7 @@ export default function PrivacyPage() {
               To submit a data access request, exercise GDPR/CCPA rights, or request account deletion, please email our privacy officer:
             </p>
             <div className="p-4 bg-zinc-100 border border-zinc-200 rounded-xl font-mono text-xs text-zinc-800 space-y-1">
-              <p className="font-bold text-zinc-950">Attributely Data Privacy Team</p>
+              <p className="font-bold text-zinc-950">Kevosh Data Privacy Team</p>
               <p>Email: <a href={`mailto:${contactEmail}`} className="text-zinc-950 underline font-semibold hover:text-zinc-700">{contactEmail}</a></p>
               <p className="text-zinc-500">Response SLA: Within 48 business hours</p>
             </div>
@@ -226,7 +226,7 @@ export default function PrivacyPage() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-200 bg-white py-6 px-4 text-center text-xs text-zinc-500 font-mono">
-        <p>© {new Date().getFullYear()} Attributely. All rights reserved. | <Link href="/terms" className="underline hover:text-zinc-800">Terms of Service</Link></p>
+        <p>© {new Date().getFullYear()} Kevosh. All rights reserved. | <Link href="/terms" className="underline hover:text-zinc-800">Terms of Service</Link></p>
       </footer>
     </div>
   );
