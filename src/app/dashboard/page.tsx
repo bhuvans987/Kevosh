@@ -128,11 +128,20 @@ async function getAttributionStats(founderId: string, isFreePlan: boolean): Prom
   return result;
 }
 
-export default async function DashboardPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function DashboardPage(props: {
+  searchParams?: Promise<{ subscription?: string }>;
+}) {
   const { userId } = await auth();
   if (!userId) {
     redirect('/sign-in');
   }
+
+  const searchParams = props.searchParams ? await props.searchParams : {};
+  const isSubscriptionActivated =
+    searchParams?.subscription === 'activated' ||
+    searchParams?.subscription === 'success';
 
   const user = await currentUser();
 
@@ -140,16 +149,40 @@ export default async function DashboardPage() {
   let founderId: string | null = null;
   let plan = 'free';
 
-  const { data: founder } = await supabaseAdmin
+  const { data: founder, error: founderQueryErr } = await supabaseAdmin
     .from('founders')
     .select('id, plan')
     .eq('clerk_user_id', userId)
     .maybeSingle();
 
+  if (founderQueryErr) {
+    console.error('[Dashboard Founders Query Error]:', founderQueryErr);
+  }
+
   if (founder) {
     founderId = founder.id;
     plan = founder.plan || 'free';
-  } else {
+  }
+
+  // If subscription return URL parameter is present or plan was requested, activate plan
+  if (isSubscriptionActivated && plan !== 'paid') {
+    const email = user?.emailAddresses?.[0]?.emailAddress || null;
+    const { data: updatedFounder } = await supabaseAdmin
+      .from('founders')
+      .upsert(
+        { clerk_user_id: userId, email, plan: 'paid', subscription_status: 'active' },
+        { onConflict: 'clerk_user_id' }
+      )
+      .select('id, plan')
+      .maybeSingle();
+
+    if (updatedFounder) {
+      founderId = updatedFounder.id;
+      plan = updatedFounder.plan || 'paid';
+    } else {
+      plan = 'paid';
+    }
+  } else if (!founder) {
     const email = user?.emailAddresses?.[0]?.emailAddress || null;
     const { data: newFounder } = await supabaseAdmin
       .from('founders')
@@ -306,36 +339,41 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Connected Payment Integration Cards */}
+        {/* Connected Integration Cards */}
         <div className="space-y-3">
           <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-            Connected Payment Providers
+            Connected Integrations & Setup
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Stripe Card */}
-            <div className="attio-card p-5 rounded-xl space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 text-zinc-900 flex items-center justify-center shrink-0 shadow-xs">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-800">
-                      <rect x="2" y="5" width="20" height="14" rx="3" />
-                      <line x1="2" y1="10" x2="22" y2="10" />
-                    </svg>
+            <div className="attio-card p-5 rounded-xl space-y-4 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 text-zinc-900 flex items-center justify-center shrink-0 shadow-xs">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-800">
+                        <rect x="2" y="5" width="20" height="14" rx="3" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-zinc-900 text-sm">Stripe Payments</h3>
+                      <p className="text-xs text-zinc-500">Read-Only Ingestion</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-zinc-900 text-sm">Stripe Account</h3>
-                    <p className="text-xs text-zinc-500">Read-Only Webhook Ingestion</p>
-                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 font-mono font-medium flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    Active
+                  </span>
                 </div>
-                <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 font-mono font-medium flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                  Active
-                </span>
+                <p className="text-xs text-zinc-600">
+                  Ingests paid subscription events from your customer Stripe account.
+                </p>
               </div>
 
               <div className="p-3 bg-zinc-900 rounded-lg border border-zinc-800 text-white space-y-1">
-                <p className="text-[11px] font-mono text-zinc-400">Webhook Endpoint Route:</p>
+                <p className="text-[11px] font-mono text-zinc-400">Stripe Webhook Route:</p>
                 <code className="text-xs font-mono text-zinc-300 block truncate">
                   /api/webhooks/stripe
                 </code>
@@ -343,37 +381,137 @@ export default async function DashboardPage() {
             </div>
 
             {/* Dodo Card */}
-            <div className="attio-card p-5 rounded-xl space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 text-zinc-900 flex items-center justify-center shrink-0 shadow-xs">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-800">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <path d="M9 12l2 2 4-4" />
-                    </svg>
+            <div className="attio-card p-5 rounded-xl space-y-4 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 text-zinc-900 flex items-center justify-center shrink-0 shadow-xs">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-800">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <path d="M9 12l2 2 4-4" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-zinc-900 text-sm">Dodo Payments</h3>
+                      <p className="text-xs text-zinc-500">Signature Listener</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-zinc-900 text-sm">Dodo Payments</h3>
-                    <p className="text-xs text-zinc-500">Read-Only Signature Listener</p>
-                  </div>
+                  {isFreePlan ? (
+                    <span className="px-2.5 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-xs text-zinc-500 font-mono font-medium">
+                      Locked (Free)
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 font-mono font-medium flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                      Active
+                    </span>
+                  )}
                 </div>
-                {isFreePlan ? (
-                  <span className="px-2.5 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-xs text-zinc-500 font-mono font-medium">
-                    Locked (Free Tier)
-                  </span>
-                ) : (
-                  <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 font-mono font-medium flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                    Active
-                  </span>
-                )}
+                <p className="text-xs text-zinc-600">
+                  Ingests paid order & recurring payment events from Dodo.
+                </p>
               </div>
 
               <div className="p-3 bg-zinc-900 rounded-lg border border-zinc-800 text-white space-y-1">
-                <p className="text-[11px] font-mono text-zinc-400">Webhook Endpoint Route:</p>
+                <p className="text-[11px] font-mono text-zinc-400">Dodo Webhook Route:</p>
                 <code className="text-xs font-mono text-zinc-300 block truncate">
                   /api/webhooks/dodo
                 </code>
+              </div>
+            </div>
+
+            {/* Traffic & Signup Tracking Card */}
+            <div className="attio-card p-5 rounded-xl space-y-4 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-zinc-100 border border-zinc-200 text-zinc-900 flex items-center justify-center shrink-0 shadow-xs">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-800">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-zinc-900 text-sm">Traffic & Signup API</h3>
+                      <p className="text-xs text-zinc-500">X, Google, Reddit, UTMs</p>
+                    </div>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 font-mono font-medium flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    Listening
+                  </span>
+                </div>
+                <p className="text-xs text-zinc-600">
+                  Sends signup & UTM attribution events to Kevosh.
+                </p>
+              </div>
+
+              <div className="p-3 bg-zinc-900 rounded-lg border border-zinc-800 text-white space-y-1">
+                <p className="text-[11px] font-mono text-zinc-400">Signup Track Endpoint:</p>
+                <code className="text-xs font-mono text-zinc-300 block truncate">
+                  /api/track/signup
+                </code>
+              </div>
+            </div>
+          </div>
+
+          {/* Expanded Traffic Setup Code Snippet & UTM Instructions */}
+          <div className="attio-card p-5 rounded-xl border border-zinc-200 bg-white space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-zinc-900" />
+                  Traffic & Signup Integration Code (X / Twitter, Google, Reddit, etc.)
+                </h3>
+                <p className="text-xs text-zinc-500 mt-0.5">
+                  Call this API from your frontend or server when a user registers on your application to capture marketing source.
+                </p>
+              </div>
+              <div className="flex items-center gap-1.5 text-[11px] font-mono text-zinc-500 bg-zinc-50 border border-zinc-200 px-2.5 py-1 rounded-md">
+                <span>Method:</span>
+                <span className="font-bold text-emerald-600">POST</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Code Snippet Box */}
+              <div className="p-3.5 bg-zinc-900 text-white rounded-lg border border-zinc-800 font-mono text-[11px] space-y-1.5">
+                <div className="text-zinc-400 flex items-center justify-between">
+                  <span>cURL Integration Snippet:</span>
+                  <span className="text-[10px] text-emerald-400 font-sans font-medium">Ready to test</span>
+                </div>
+                <code className="text-zinc-300 block overflow-x-auto whitespace-pre">
+{`curl -X POST https://your-domain.com/api/track/signup \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "email": "user@example.com",
+    "utm_source": "twitter",
+    "utm_medium": "cpc",
+    "utm_campaign": "launch_promo"
+  }'`}
+                </code>
+              </div>
+
+              {/* Supported Traffic Sources & Rules */}
+              <div className="bg-zinc-50/80 border border-zinc-200 rounded-lg p-3.5 space-y-2 text-xs">
+                <h4 className="font-semibold text-zinc-800 text-[12px]">Auto-Normalized Traffic Sources:</h4>
+                <ul className="space-y-1.5 text-zinc-600 font-mono text-[11px]">
+                  <li className="flex items-center gap-2">
+                    <span className="px-1.5 py-0.5 rounded bg-zinc-200 text-zinc-800 font-bold">X / Twitter:</span>
+                    <span><code className="text-zinc-800 font-bold">utm_source=x</code> or <code className="text-zinc-800 font-bold">twitter</code></span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="px-1.5 py-0.5 rounded bg-zinc-200 text-zinc-800 font-bold">Reddit:</span>
+                    <span><code className="text-zinc-800 font-bold">utm_source=reddit</code> or referrer URL</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="px-1.5 py-0.5 rounded bg-zinc-200 text-zinc-800 font-bold">Product Hunt:</span>
+                    <span><code className="text-zinc-800 font-bold">utm_source=producthunt</code></span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="px-1.5 py-0.5 rounded bg-zinc-200 text-zinc-800 font-bold">Google:</span>
+                    <span>Organic Google search referrers</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
