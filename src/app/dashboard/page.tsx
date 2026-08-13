@@ -7,6 +7,7 @@ import { SourceAttributionChart } from '@/components/SourceAttributionChart';
 import { WeeklySummaryCard } from '@/components/WeeklySummaryCard';
 import { UpgradeButton } from '@/components/UpgradeButton';
 import { DeleteAccountModal } from '@/components/DeleteAccountModal';
+import { QuickStartModal } from '@/components/QuickStartModal';
 
 export interface SourceStat {
   source_label: string;
@@ -148,10 +149,11 @@ export default async function DashboardPage(props: {
   // Look up internal founder record by clerk_user_id
   let founderId: string | null = null;
   let plan = 'free';
+  let publicApiKey: string | null = null;
 
   const { data: founder, error: founderQueryErr } = await supabaseAdmin
     .from('founders')
-    .select('id, plan')
+    .select('id, plan, public_api_key')
     .eq('clerk_user_id', userId)
     .maybeSingle();
 
@@ -162,6 +164,26 @@ export default async function DashboardPage(props: {
   if (founder) {
     founderId = founder.id;
     plan = founder.plan || 'free';
+    publicApiKey = founder.public_api_key || null;
+  }
+
+  // Ensure founder has a valid public_api_key
+  if (!publicApiKey && userId) {
+    const generatedKey = `kev_live_${Math.random().toString(36).substring(2, 12)}${Date.now().toString(36)}`;
+    const { data: updatedKeyFounder } = await supabaseAdmin
+      .from('founders')
+      .upsert(
+        { clerk_user_id: userId, public_api_key: generatedKey },
+        { onConflict: 'clerk_user_id' }
+      )
+      .select('public_api_key')
+      .maybeSingle();
+
+    if (updatedKeyFounder?.public_api_key) {
+      publicApiKey = updatedKeyFounder.public_api_key;
+    } else {
+      publicApiKey = generatedKey;
+    }
   }
 
   // If subscription return URL parameter is present or plan was requested, activate plan
@@ -173,12 +195,13 @@ export default async function DashboardPage(props: {
         { clerk_user_id: userId, email, plan: 'paid', subscription_status: 'active' },
         { onConflict: 'clerk_user_id' }
       )
-      .select('id, plan')
+      .select('id, plan, public_api_key')
       .maybeSingle();
 
     if (updatedFounder) {
       founderId = updatedFounder.id;
       plan = updatedFounder.plan || 'paid';
+      if (updatedFounder.public_api_key) publicApiKey = updatedFounder.public_api_key;
     } else {
       plan = 'paid';
     }
@@ -190,12 +213,13 @@ export default async function DashboardPage(props: {
         { clerk_user_id: userId, email, plan: 'free' },
         { onConflict: 'clerk_user_id' }
       )
-      .select('id, plan')
+      .select('id, plan, public_api_key')
       .maybeSingle();
 
     if (newFounder) {
       founderId = newFounder.id;
       plan = newFounder.plan || 'free';
+      if (newFounder.public_api_key) publicApiKey = newFounder.public_api_key;
     }
   }
 
@@ -341,9 +365,12 @@ export default async function DashboardPage(props: {
 
         {/* Connected Integration Cards */}
         <div className="space-y-3">
-          <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-            Connected Integrations & Setup
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              Connected Integrations & Setup
+            </h2>
+            <QuickStartModal apiKey={publicApiKey} />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Stripe Card */}

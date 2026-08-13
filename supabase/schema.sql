@@ -5,6 +5,7 @@
 CREATE TABLE IF NOT EXISTS public.founders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     clerk_user_id TEXT UNIQUE NOT NULL,               -- Unique Clerk User ID (e.g. user_2...)
+    public_api_key TEXT UNIQUE,                       -- Public API key for snippet tracking (e.g. kev_live_...)
     email TEXT,                                       -- Primary email address
     plan TEXT NOT NULL DEFAULT 'free',                -- Subscription plan: 'free' or 'paid' ($20/mo)
     subscription_id TEXT,                             -- External Dodo Payments subscription ID
@@ -12,8 +13,9 @@ CREATE TABLE IF NOT EXISTS public.founders (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Index for fast founder lookup by Clerk User ID
+-- Indexes for founders
 CREATE INDEX IF NOT EXISTS idx_founders_clerk_user_id ON public.founders(clerk_user_id);
+CREATE INDEX IF NOT EXISTS idx_founders_public_api_key ON public.founders(public_api_key);
 CREATE INDEX IF NOT EXISTS idx_founders_plan ON public.founders(plan);
 
 -- RLS Policies for founders
@@ -92,10 +94,12 @@ CREATE POLICY "Service role full access on signups" ON public.signups
 
 /*
 MIGRATION NOTICE FOR EXISTING DATABASES:
-1. To add founder billing columns to an existing database, run:
+1. To add public API key & founder billing columns to an existing database, run:
+   ALTER TABLE public.founders ADD COLUMN IF NOT EXISTS public_api_key TEXT UNIQUE;
    ALTER TABLE public.founders ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free';
    ALTER TABLE public.founders ADD COLUMN IF NOT EXISTS subscription_id TEXT;
    ALTER TABLE public.founders ADD COLUMN IF NOT EXISTS subscription_status TEXT DEFAULT 'active';
+   CREATE INDEX IF NOT EXISTS idx_founders_public_api_key ON public.founders(public_api_key);
 
 2. If your Supabase database already has `payments` table with `user_id` as TEXT:
    ALTER TABLE public.payments ALTER COLUMN user_id TYPE UUID USING user_id::uuid;
