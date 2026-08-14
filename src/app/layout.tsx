@@ -20,6 +20,14 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'Kevosh — Multi-Channel Revenue Attribution for Stripe & Dodo Payments',
   description: 'The revenue attribution engine for modern SaaS founders. Connect Stripe and Dodo Payments in seconds.',
+  icons: {
+    icon: [
+      { url: '/icon.svg?v=3', type: 'image/svg+xml' },
+      { url: '/icon.png?v=3', type: 'image/png' },
+      { url: '/favicon.ico?v=3' },
+    ],
+    apple: '/apple-icon.png?v=3',
+  },
 };
 
 export default function RootLayout({

@@ -4,6 +4,7 @@ import { UserButton, SignInButton } from '@clerk/nextjs';
 import { UpgradeButton } from '@/components/UpgradeButton';
 import { InteractiveProductShowcase } from '@/components/InteractiveProductShowcase';
 import { FaqAccordion } from '@/components/FaqAccordion';
+import { Logo } from '@/components/Logo';
 
 export default async function HomePage() {
   const { userId } = await auth();
@@ -17,17 +18,8 @@ export default async function HomePage() {
       {/* Header Navigation */}
       <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-xs group-hover:bg-zinc-800 transition-colors">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="font-bold text-base tracking-tight text-zinc-900 font-sans">
-              Kevosh
-            </span>
+          <Link href="/" className="group flex items-center">
+            <Logo size={32} />
           </Link>
         </div>
 
@@ -73,6 +65,7 @@ export default async function HomePage() {
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 pt-10 sm:pt-14 pb-16 text-center max-w-5xl mx-auto space-y-12 sm:space-y-16">
         {/* Core Pitch Pill & Heading */}
         <div className="space-y-4 max-w-3xl mx-auto">
+
           {/* Attio Floating Pill Badge with Top Hairline Gradient */}
           <a
             href="#how-it-works"
@@ -364,7 +357,7 @@ export default async function HomePage() {
       <footer className="relative z-10 border-t border-zinc-200/80 bg-white py-8 px-6 text-center text-xs text-zinc-500">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-zinc-900">Kevosh</span>
+            <Logo size={20} showText={true} textClassName="font-bold text-zinc-900 text-xs" />
             <span>© {new Date().getFullYear()} Kevosh Inc. All rights reserved.</span>
           </div>
           <div className="flex items-center gap-4 text-zinc-600">

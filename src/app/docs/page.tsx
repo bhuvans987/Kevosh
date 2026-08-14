@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Logo } from '@/components/Logo';
 
 export const metadata = {
   title: 'Setup & Integration Guide - Kevosh',
@@ -11,17 +12,8 @@ export default function DocsPage() {
       {/* Top Nav */}
       <header className="border-b border-zinc-200/80 bg-white px-4 sm:px-8 py-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded-md bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-xs">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="text-white">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <span className="font-bold text-sm tracking-tight text-zinc-900">
-              Kevosh
-            </span>
+          <Link href="/dashboard" className="group flex items-center">
+            <Logo size={28} textClassName="font-bold text-sm tracking-tight text-zinc-900" />
           </Link>
           <span className="text-zinc-300">/</span>
           <span className="text-xs font-semibold text-zinc-700 bg-zinc-100 border border-zinc-200 px-2.5 py-0.5 rounded-md">
